@@ -7,53 +7,68 @@ const posts = {
   'botox-2025': {
     title: 'Botox-Trends 2025: Natürliche Ergebnisse im Fokus',
     content: `
-      <h2>Einführung</h2>
+      <h2 id="einfuehrung">Einführung</h2>
       <p>Im Jahr 2025 steht Botox für natürliche und subtile Ergebnisse. Die neuen Techniken konzentrieren sich auf Prävention statt Korrektur.</p>
 
-      <h2>Neue Methoden</h2>
+      <h2 id="neue-methoden">Neue Methoden</h2>
       <p>Micro-Dosing und Kombinationsbehandlungen ermöglichen natürlichere Resultate.</p>
 
-      <h2>Sicherheit</h2>
+      <h2 id="sicherheit">Sicherheit</h2>
       <p>Moderne Botox-Produkte sind sicherer und langlebiger.</p>
 
       <p><strong>Empfohlene Praxis:</strong> <a href="/practices/dr-anna-meier" className="text-blue-600">Dr. Anna Meier, München</a></p>
     `,
     date: '2025-02-14',
-    author: 'Dr. Anna Meier'
+    author: 'Dr. Anna Meier',
+    toc: [
+      { id: 'einfuehrung', text: 'Einführung' },
+      { id: 'neue-methoden', text: 'Neue Methoden' },
+      { id: 'sicherheit', text: 'Sicherheit' }
+    ]
   },
   'hyaluron': {
     title: 'Hyaluronsäure Füllungen: Sicherheit und Effektivität',
     content: `
-      <h2>Was ist Hyaluronsäure?</h2>
+      <h2 id="was-ist-hyaluronsaeure">Was ist Hyaluronsäure?</h2>
       <p>Hyaluronsäure ist ein natürlicher Bestandteil der Haut und ideal für Füllungen.</p>
 
-      <h2>Vorteile</h2>
+      <h2 id="vorteile">Vorteile</h2>
       <p>Sofortige Ergebnisse, minimal invasiv, reversibel.</p>
 
-      <h2>Risiken und Sicherheit</h2>
+      <h2 id="risiken">Risiken und Sicherheit</h2>
       <p>Bei qualifizierten Ärzten sehr sicher.</p>
 
       <p><strong>Empfohlene Praxis:</strong> <a href="/practices/dr-max-mueller" className="text-blue-600">Dr. Max Müller, München</a></p>
     `,
     date: '2025-02-10',
-    author: 'Dr. Max Müller'
+    author: 'Dr. Max Müller',
+    toc: [
+      { id: 'was-ist-hyaluronsaeure', text: 'Was ist Hyaluronsäure?' },
+      { id: 'vorteile', text: 'Vorteile' },
+      { id: 'risiken', text: 'Risiken und Sicherheit' }
+    ]
   },
   'anti-aging': {
     title: 'Anti-Aging Routinen: Was wirklich funktioniert',
     content: `
-      <h2>Ganzheitlicher Ansatz</h2>
+      <h2 id="ganzheitlicher-ansatz">Ganzheitlicher Ansatz</h2>
       <p>Anti-Aging beginnt mit der richtigen Pflege und Lebensweise.</p>
 
-      <h2>Behandlungen</h2>
+      <h2 id="behandlungen">Behandlungen</h2>
       <p>Von Cremes bis zu medizinischen Verfahren.</p>
 
-      <h2>Ernährung und Lifestyle</h2>
+      <h2 id="ernaahrung">Ernährung und Lifestyle</h2>
       <p>Wichtige Faktoren für langfristige Jugendlichkeit.</p>
 
       <p><strong>Empfohlene Praxis:</strong> <a href="/practices/dr-lisa-schmidt" className="text-blue-600">Dr. Lisa Schmidt, München</a></p>
     `,
     date: '2025-02-05',
-    author: 'Dr. Lisa Schmidt'
+    author: 'Dr. Lisa Schmidt',
+    toc: [
+      { id: 'ganzheitlicher-ansatz', text: 'Ganzheitlicher Ansatz' },
+      { id: 'behandlungen', text: 'Behandlungen' },
+      { id: 'ernaahrung', text: 'Ernährung und Lifestyle' }
+    ]
   }
 };
 
@@ -86,6 +101,20 @@ export default function BlogPost({ params }: PageProps) {
             </div>
           </header>
 
+          {/* TOC */}
+          <nav className="mb-8 bg-gray-100 p-4 rounded">
+            <h3 className="font-semibold mb-2">Inhaltsverzeichnis</h3>
+            <ul className="space-y-1">
+              {post.toc.map((item) => (
+                <li key={item.id}>
+                  <a href={`#${item.id}`} className="text-blue-600 hover:underline">
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
           <div
             className="prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: post.content }}
@@ -103,6 +132,28 @@ export default function BlogPost({ params }: PageProps) {
           <h2 className="text-2xl font-bold mb-4">Kommentare</h2>
           <DiscussionEmbed shortname="aint-my-cloud" config={disqusConfig} />
         </div>
+
+        {/* Article Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": post.title,
+              "author": {
+                "@type": "Person",
+                "name": post.author
+              },
+              "datePublished": post.date,
+              "dateModified": post.date,
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://aint-my-cloud.vercel.app/blog/${params.slug}`
+              }
+            })
+          }}
+        />
       </main>
     </div>
   );

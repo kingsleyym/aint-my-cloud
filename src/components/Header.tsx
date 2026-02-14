@@ -18,6 +18,9 @@ export default function Header() {
             <Link href="/practices" className="text-gray-700 hover:text-gray-900">
               Praxen
             </Link>
+            <Link href="/faq" className="text-gray-700 hover:text-gray-900">
+              FAQ
+            </Link>
             <Link href="/about" className="text-gray-700 hover:text-gray-900">
               Über uns
             </Link>
