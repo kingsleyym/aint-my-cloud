@@ -1,6 +1,5 @@
 import Header from '@/components/Header';
 import Link from 'next/link';
-import { DiscussionEmbed } from 'disqus-react';
 
 // Sample post data - in real app, fetch from CMS
 const posts = {
@@ -20,11 +19,13 @@ const posts = {
     `,
     date: '2025-02-14',
     author: 'Dr. Anna Meier',
+    category: 'procedures',
     toc: [
       { id: 'einfuehrung', text: 'Einführung' },
       { id: 'neue-methoden', text: 'Neue Methoden' },
       { id: 'sicherheit', text: 'Sicherheit' }
-    ]
+    ],
+    related: ['hyaluron', 'anti-aging']
   },
   'hyaluron': {
     title: 'Hyaluronsäure Füllungen: Sicherheit und Effektivität',
@@ -42,11 +43,13 @@ const posts = {
     `,
     date: '2025-02-10',
     author: 'Dr. Max Müller',
+    category: 'procedures',
     toc: [
       { id: 'was-ist-hyaluronsaeure', text: 'Was ist Hyaluronsäure?' },
       { id: 'vorteile', text: 'Vorteile' },
       { id: 'risiken', text: 'Risiken und Sicherheit' }
-    ]
+    ],
+    related: ['botox-2025', 'anti-aging']
   },
   'anti-aging': {
     title: 'Anti-Aging Routinen: Was wirklich funktioniert',
@@ -64,11 +67,13 @@ const posts = {
     `,
     date: '2025-02-05',
     author: 'Dr. Lisa Schmidt',
+    category: 'tips',
     toc: [
       { id: 'ganzheitlicher-ansatz', text: 'Ganzheitlicher Ansatz' },
       { id: 'behandlungen', text: 'Behandlungen' },
       { id: 'ernaahrung', text: 'Ernährung und Lifestyle' }
-    ]
+    ],
+    related: ['botox-2025', 'hyaluron']
   }
 };
 
@@ -82,12 +87,6 @@ export default function BlogPost({ params }: PageProps) {
   if (!post) {
     return <div>Post nicht gefunden</div>;
   }
-
-  const disqusConfig = {
-    url: `https://aint-my-cloud.vercel.app/blog/${params.slug}`,
-    identifier: params.slug,
-    title: post.title,
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -125,13 +124,29 @@ export default function BlogPost({ params }: PageProps) {
               ← Zurück zum Blog
             </Link>
           </footer>
-        </article>
 
-        {/* Comments Section */}
-        <div className="mt-12 bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-2xl font-bold mb-4">Kommentare</h2>
-          <DiscussionEmbed shortname="aint-my-cloud" config={disqusConfig} />
-        </div>
+          {/* Related Articles */}
+          {post.related && post.related.length > 0 && (
+            <section className="mt-8">
+              <h3 className="text-xl font-semibold mb-4">Verwandte Artikel</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {post.related.map((slug) => {
+                  const relatedPost = posts[slug as keyof typeof posts];
+                  return relatedPost ? (
+                    <div key={slug} className="bg-gray-100 p-4 rounded">
+                      <h4 className="font-medium">
+                        <Link href={`/blog/${slug}`} className="text-blue-600 hover:underline">
+                          {relatedPost.title}
+                        </Link>
+                      </h4>
+                      <p className="text-sm text-gray-600 mt-1">{relatedPost.date}</p>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            </section>
+          )}
+        </article>
 
         {/* Article Schema */}
         <script

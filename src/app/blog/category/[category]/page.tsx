@@ -1,66 +1,60 @@
 import Header from '@/components/Header';
 import Link from 'next/link';
 
-// Sample posts data
-const posts = [
-  {
-    id: 'botox-2025',
+// Import posts from parent or define here
+const posts = {
+  'botox-2025': {
     title: 'Botox-Trends 2025: Natürliche Ergebnisse im Fokus',
     excerpt: 'Entdecken Sie die neuesten Entwicklungen in Botox-Behandlungen für ein natürliches Aussehen.',
     date: '2025-02-14',
     author: 'Dr. Anna Meier',
-    image: '/images/botox.jpg'
+    category: 'procedures'
   },
-  {
-    id: 'hyaluron',
+  'hyaluron': {
     title: 'Hyaluronsäure Füllungen: Sicherheit und Effektivität',
     excerpt: 'Alles Wissenswerte über Hyaluron-Behandlungen und warum sie so beliebt sind.',
     date: '2025-02-10',
     author: 'Dr. Max Müller',
-    image: '/images/hyaluron.jpg'
+    category: 'procedures'
   },
-  {
-    id: 'anti-aging',
+  'anti-aging': {
     title: 'Anti-Aging Routinen: Was wirklich funktioniert',
     excerpt: 'Professionelle Tipps für effektive Anti-Aging-Behandlungen.',
     date: '2025-02-05',
     author: 'Dr. Lisa Schmidt',
-    image: '/images/anti-aging.jpg'
+    category: 'tips'
   }
-];
+};
 
-export default function Blog() {
+interface PageProps {
+  params: { category: string };
+}
+
+export default function Category({ params }: PageProps) {
+  const categoryPosts = Object.entries(posts).filter(([_, post]) => post.category === params.category);
+
+  const categoryNames = {
+    procedures: 'Behandlungen',
+    trends: 'Trends',
+    tips: 'Tipps'
+  };
+
+  const categoryName = categoryNames[params.category as keyof typeof categoryNames] || params.category;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h1 className="text-4xl font-bold text-center mb-12">Unser Blog</h1>
-
-        {/* Categories */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Kategorien</h2>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/blog/category/procedures" className="bg-blue-100 text-blue-800 px-4 py-2 rounded hover:bg-blue-200">
-              Behandlungen
-            </Link>
-            <Link href="/blog/category/trends" className="bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200">
-              Trends
-            </Link>
-            <Link href="/blog/category/tips" className="bg-purple-100 text-purple-800 px-4 py-2 rounded hover:bg-purple-200">
-              Tipps
-            </Link>
-          </div>
-        </section>
-
+        <h1 className="text-4xl font-bold text-center mb-12">Kategorie: {categoryName}</h1>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {posts.map((post) => (
-            <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+          {categoryPosts.map(([slug, post]) => (
+            <article key={slug} className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-48 bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">Bild: {post.image}</span>
+                <span className="text-gray-500">Bild: {post.title}</span>
               </div>
               <div className="p-6">
                 <h2 className="text-xl font-semibold mb-2">
-                  <Link href={`/blog/${post.id}`} className="hover:text-blue-600">
+                  <Link href={`/blog/${slug}`} className="hover:text-blue-600">
                     {post.title}
                   </Link>
                 </h2>
@@ -72,6 +66,9 @@ export default function Blog() {
             </article>
           ))}
         </div>
+        {categoryPosts.length === 0 && (
+          <p className="text-center text-gray-600">Keine Artikel in dieser Kategorie.</p>
+        )}
       </main>
     </div>
   );

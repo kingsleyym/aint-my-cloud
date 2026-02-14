@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aint-my-cloud.vercel.app/sitemap.xml
