@@ -1,5 +1,10 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import Features from '@/components/Features';
+import Testimonials from '@/components/Testimonials';
+import Resources from '@/components/Resources';
+import Newsletter from '@/components/Newsletter';
+import TrustBadges from '@/components/TrustBadges';
 import CTA from '@/components/CTA';
 import Link from 'next/link';
 
@@ -13,6 +18,8 @@ export default function Home() {
         ctaText="Zum Blog"
         ctaHref="/blog"
       />
+
+      <Features />
 
       {/* Featured Content */}
       <section className="py-16">
@@ -49,6 +56,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Testimonials />
+      <Resources />
+      <Newsletter />
+
+      <TrustBadges />
 
       <CTA
         title="Bleiben Sie informiert"
